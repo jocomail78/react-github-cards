@@ -2,9 +2,9 @@ import React from 'react';
 import './App.css';
 
 // GitHub usernames: gaearon, sophiebits, sebmarkbage, bvaughn
-const Heading = (props) => {
+const Heading = ({title}) => {
   return (
-    <header className="header">{props.title}</header>
+    <header className="header">{title} Batman</header>
   );
 };
 
@@ -27,7 +27,7 @@ const Card = (props) => (
     <div className="github-profile">
       <img  alt="Github avatar" src={props.src} />
       <div className="info">
-        <div className="name"> {props.fullName} </div>
+        <div className="name" style={{fontSize:'125%', textDecoration:'underline'}}> {props.fullName} </div>
         <div className="company">{props.org === null ? '': props.org}</div>
       </div>
     </div>
@@ -35,7 +35,7 @@ const Card = (props) => (
 
 const CardList = (props) => (
      <div className="container-fluid">
-      {props.cardsData.map(cardData => <Card key={cardData.userName} {...cardData} />)}
+      {props.cardsData.map(cardData => <Card key={cardData.id} {...cardData} />)}
      </div>
 );
 
@@ -63,12 +63,13 @@ const App = () => {
       const response = await fetch(`https://api.github.com/users/${userName}`);
       if (response.status === 200) {
         // const {avatar_url, name, company, id} = await response.json();
-        const {name, company, id} = await response.json();
+        const {avatar_url, name, company, id} = await response.json();
         const data = {
           userName: userName,
-          src: `https://avatars0.githubusercontent.com/u/${id}?v=4`,
+          src: avatar_url,
           fullName: name,
           org: company,
+          id: id
         };
         updateCardsData(cardsData => cardsData.concat(data));
        }
